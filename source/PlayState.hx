@@ -985,7 +985,7 @@ class PlayState extends MusicBeatState
 			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
 		}
 
-		if(dad.curCharacter.startsWith(gf.curCharacter)) {
+		if(dad.curCharacter.startsWith('gf')) {
 			dad.setPosition(GF_X, GF_Y);
 			if(gf != null)
 				gf.visible = false;
@@ -2454,12 +2454,13 @@ class PlayState extends MusicBeatState
 			{
 				for (i in 0...event[1].length)
 				{
-					var newEventNote:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2]];
+					var newEventNote:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2], event[1][i][3]];
 					var subEvent:EventNote = {
 						strumTime: newEventNote[0] + ClientPrefs.noteOffset,
 						event: newEventNote[1],
 						value1: newEventNote[2],
-						value2: newEventNote[3]
+						value2: newEventNote[3],
+						value3: newEventNote[4]
 					};
 					subEvent.strumTime -= eventNoteEarlyTrigger(subEvent);
 					eventNotes.push(subEvent);
@@ -2555,12 +2556,13 @@ class PlayState extends MusicBeatState
 		{
 			for (i in 0...event[1].length)
 			{
-				var newEventNote:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2]];
+				var newEventNote:Array<Dynamic> = [event[0], event[1][i][0], event[1][i][1], event[1][i][2], event[1][i][3]];
 				var subEvent:EventNote = {
 					strumTime: newEventNote[0] + ClientPrefs.noteOffset,
 					event: newEventNote[1],
 					value1: newEventNote[2],
-					value2: newEventNote[3]
+					value2: newEventNote[3],
+					value3: newEventNote[4]
 				};
 				subEvent.strumTime -= eventNoteEarlyTrigger(subEvent);
 				eventNotes.push(subEvent);
@@ -3401,8 +3403,12 @@ class PlayState extends MusicBeatState
 			var value2:String = '';
 			if(eventNotes[0].value2 != null)
 				value2 = eventNotes[0].value2;
+			
+			var value3:String = '';
+			if (eventNotes[0].value3 != null)
+				value3 = eventNotes[0].value3;
 
-			triggerEventNote(eventNotes[0].event, value1, value2);
+			triggerEventNote(eventNotes[0].event, value1, value2, value3);
 			eventNotes.shift();
 		}
 	}
@@ -3413,7 +3419,7 @@ class PlayState extends MusicBeatState
 		return pressed;
 	}
 
-	public function triggerEventNote(eventName:String, value1:String, value2:String) {
+	public function triggerEventNote(eventName:String, value1:String, value2:String, ?value3:String) {
 		switch(eventName) {
 			case 'Dadbattle Spotlight':
 				var val:Null<Int> = Std.parseInt(value1);
@@ -3462,7 +3468,7 @@ class PlayState extends MusicBeatState
 				if(Math.isNaN(time) || time <= 0) time = 0.6;
 
 				if(value != 0) {
-					if(dad.curCharacter.startsWith(gf.curCharacter)) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
+					if(dad.curCharacter.startsWith('gf')) { //Tutorial GF is actually Dad! The GF is an imposter!! ding ding ding ding ding ding ding, dindinding, end my suffering
 						dad.playAnim('cheer', true);
 						dad.specialAnim = true;
 						dad.heyTimer = time;
@@ -3720,11 +3726,11 @@ class PlayState extends MusicBeatState
 								addCharacterToList(value2, charType);
 							}
 
-							var wasGf:Bool = dad.curCharacter.startsWith(gf.curCharacter);
+							var wasGf:Bool = dad.curCharacter.startsWith('gf');
 							var lastAlpha:Float = dad.alpha;
 							dad.alpha = 0.00001;
 							dad = dadMap.get(value2);
-							if(!dad.curCharacter.startsWith(gf.curCharacter)) {
+							if(!dad.curCharacter.startsWith('gf')) {
 								if(wasGf && gf != null) {
 									gf.visible = true;
 								}
@@ -3766,7 +3772,8 @@ class PlayState extends MusicBeatState
 				var val2:Float = Std.parseFloat(value2);
 				if(Math.isNaN(val1)) val1 = 1;
 				if(Math.isNaN(val2)) val2 = 0;
-
+				
+				var ease = FunkinLua.getFlxEaseByString(value3);
 				var newValue:Float = SONG.speed * ClientPrefs.getGameplaySetting('scrollspeed', 1) * val1;
 
 				if(val2 <= 0)
@@ -3775,8 +3782,8 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2, {ease: FlxEase.linear, onComplete:
-						function (twn:FlxTween)
+					songSpeedTween = FlxTween.tween(this, {songSpeed: newValue}, val2, {ease: ease, onComplete:
+						function(twn:FlxTween)
 						{
 							songSpeedTween = null;
 						}
@@ -4751,7 +4758,8 @@ class PlayState extends MusicBeatState
 
 	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
 		var skin:String = 'noteSplashes';
-		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
+		// Checking for '' too prevent that wierd splash bug
+		if((PlayState.SONG.splashSkin != null || PlayState.SONG.splashSkin != '') && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
 
 		var hue:Float = 0;
 		var sat:Float = 0;
