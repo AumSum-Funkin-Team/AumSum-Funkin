@@ -1,5 +1,26 @@
 {
+	"storyName": "Covers ft. AumSum and The Narrator",
+	"difficulties": "",
+	"hideFreeplay": false,
+	"weekBackground": "covers",
+	"weekBefore": "tutorial",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"startUnlocked": true,
+	"hideStoryMode": false,
 	"songs": [
+		[
+			"Warmup",
+			"aumsum",
+			[
+				255,
+				255,
+				255
+			]
+		],
 		[
 			"Rano",
 			"aumsum",
@@ -19,23 +40,11 @@
 			]
 		]
 	],
-	"hiddenUntilUnlocked": false,
-	"hideFreeplay": false,
-	"weekBackground": "covers",
-	"difficulties": "",
 	"weekCharacters": [
 		"",
 		"",
 		""
 	],
-	"storyName": "Covers ft. AumSum and The Narrator",
-	"weekName": "Cover Week",
-	"freeplayColor": [
-		146,
-		113,
-		253
-	],
-	"hideStoryMode": false,
-	"weekBefore": "tutorial",
-	"startUnlocked": true
+	"hiddenUntilUnlocked": false,
+	"weekName": "Cover Week"
 }
