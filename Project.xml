@@ -47,11 +47,12 @@
 	<define name="MODS_ALLOWED" if="desktop" />
 	<define name="LUA_ALLOWED" if="desktop" />
 	<define name="ACHIEVEMENTS_ALLOWED" />
+	<define name="HAXE_EXTENSION" unless="web || neko" />
 	<!--<define name="BIG_MEM" />-->
 	<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
 	<define name="PSYCH_WATERMARKS"/> <!-- DELETE THIS TO REMOVE WATERMARKS/DEV NAMES ON TITLE SCREEN -->
 	<define name="TITLE_SCREEN_EASTER_EGG"/>
-	<define name="CRASH_HANDLER" if="desktop release" />
+	<!--<define name="CRASH_HANDLER" if="desktop release" />-->
 
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/preload" rename="assets" exclude="*.mp3"  unless="web"/>
@@ -132,6 +133,8 @@
 	<haxelib name="hscript" />
 	<define name="hscriptPos" />
 	<haxeflag name="-dce no" />
+
+	<haxelib name="SScript" if="HAXE_EXTENSION"/>
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
